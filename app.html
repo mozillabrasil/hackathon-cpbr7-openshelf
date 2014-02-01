@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no" />
+  <title>OpenShelf</title>
+  <!-- Building blocks -->
+  <link rel="stylesheet" href="style/action_menu.css">
+  <link rel="stylesheet" href="style/buttons.css">
+  <link rel="stylesheet" href="style/confirm.css">
+  <link rel="stylesheet" href="style/edit_mode.css">
+  <link rel="stylesheet" href="style/headers.css">
+  <link rel="stylesheet" href="style/input_areas.css">
+  <link rel="stylesheet" href="style/status.css">
+  <link rel="stylesheet" href="style/switches.css">
+  <link rel="stylesheet" href="style/drawer.css">
+  <link rel="stylesheet" href="style/lists.css">
+  <link rel="stylesheet" href="style/progress_activity.css">
+  <link rel="stylesheet" href="style/scrolling.css">
+  <link rel="stylesheet" href="style/seekbars.css">
+  <link rel="stylesheet" href="style/tabs.css">
+  <link rel="stylesheet" href="style/toolbars.css">
+
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="icons/styles/action_icons.css">
+  <link rel="stylesheet" href="icons/styles/media_icons.css">
+  <link rel="stylesheet" href="icons/styles/comms_icons.css">
+  <link rel="stylesheet" href="icons/styles/settings_icons.css">
+
+  <!-- Transitions -->
+  <link rel="stylesheet" href="transitions.css">
+  
+  <!-- Util CSS: some extra tricks -->
+  <link rel="stylesheet" href="util.css">
+  <link rel="stylesheet" href="fonts.css">
+
+  <!-- Additional markup to make Building Blocks kind of cross browser -->
+  <link rel="stylesheet" href="cross_browser.css">
+
+  <style>
+    #index {
+      height: 100%;
+    }
+    [data-position="right"] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      transform: translateX(100%);
+      -webkit-transform: translateX(100%);
+      z-index: 15;
+      z-index: 100; /* -> drawer */
+    }
+    section[role="region"][data-position="right"] {
+      position: absolute;
+    }
+    [data-position="right"].current {
+      animation: rightToCurrent 0.4s forwards;
+      -webkit-animation: rightToCurrent 0.4s forwards;
+    }
+    [data-position="right"].right {
+      animation: currentToRight 0.4s forwards;
+      -webkit-animation: currentToRight 0.4s forwards;
+    }
+    [data-position="current"].left {
+      animation: currentToLeft 0.4s forwards;
+      -webkit-animation: currentToLeft 0.4s forwards;
+    }
+    [data-position="current"].current {
+      animation: leftToCurrent 0.4s forwards;
+      -webkit-animation: leftToCurrent 0.4s forwards;
+    }
+    [data-position="back"] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: -1;
+      opacity: 0;
+      /* z-index: 100; -> drawer */
+    }
+    [data-position="back"].fade-in {
+      z-index: 120;
+      animation: fadeIn 0.2s forwards;
+      -webkit-animation: fadeIn 0.2s forwards;
+    }
+    [data-position="back"].fade-out {
+      animation: fadeOut 0.2s forwards;
+      -webkit-animation: fadeOut 0.2s forwards;
+    }
+
+    [data-position="edit-mode"] {
+      position: absolute;
+      top: -5rem;
+      left: 0;
+      right: 0;
+      bottom: -7rem;
+      z-index: -1;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    [data-position="edit-mode"].edit {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 120;
+      opacity: 1;
+    }
+
+    /* Headers */
+    #headers section[role="region"] {
+      margin-bottom: 1.5rem;
+    }
+    #headers section[role="region"]:not(#drawer) {
+      display: inline;
+    }
+    #headers article header:first-child {
+      margin-top: 1.5rem;
+    }
+    #headers section[role="region"] header h2 {
+      margin: 0 0 1.5rem 0;
+    }
+
+    /* Lists */
+    /* to avoid double background effect on press */
+    [data-type=list] li>a:active { 
+      background-color: transparent;
+    }
+
+    /* Drawer */
+    section[role="region"]:not(#drawer) {
+      transition: none;
+      left: 0;
+      z-index: 0;
+      padding-left: 0;
+    }
+    section[data-type="sidebar"] + section[role="region"] > header:first-child > button, 
+    section[data-type="sidebar"] + section[role="region"] > header:first-child > a {
+      background-position: 3.5rem center;
+    }
+
+    /* Switches */
+    #switches label:last-child {
+      margin-left: 2rem;  
+    }
+
+    /* Scrolling */
+    nav[data-type="scrollbar"] {
+      padding-top: 1rem;
+    }
+    nav[data-type="scrollbar"] p {
+      opacity: 1;
+    }
+
+    /* Seek bars */
+    div[role="slider"] > label.icon {
+      background: no-repeat right top;
+      background-size: 3rem auto;
+    }
+    
+    /* Tabs */
+    #tabs .content {
+      padding: 0;
+    }
+    #tabs .content .content {
+      padding: 1.5rem 3rem;
+    }
+
+    /* Filters */
+    [role="tablist"][data-type="filter"] {
+      margin-bottom: 2rem;
+    }
+
+    .bottom[role="tablist"][data-type="filter"] {
+      bottom: auto;
+    }
+
+    /* Device rotation */
+    .landscape section[role="region"]#drawer > header:first-child {
+      /* Whatever needs to be changed on landscape */
+    }
+  </style>
+  <script type="text/javascript" defer src="js/status.js"></script>
+  <script type="text/javascript" defer src="js/seekbars.js"></script>
+  <script type="text/javascript" defer src="js/app.js"></script>
+
+  <!-- jQuery -->
+
+  <link rel="stylesheet" href="css/jquery.mobile-1.4.0.css" />
+  <script src="js/jquery-2.1.0.min.js"></script>
+  <script src="js/jquery.mobile-1.4.0.min.js"></script>
+
+    <!-- JSONP -->
+  <script type="text/javascript" defer src="js/openlibrary.js"></script>
+
+</head>
+<body>
+
+    <section id="inicio" role="region" data-position="current">
+      <header class="fixed">
+        <a id="btn-info" href="#"><span class="icon icon-menu">info</span></a>
+        <h1>OpenShelf <em>app</em></h1>
+      </header>
+      <article class="content scrollable header">
+        <form role="search">
+        <p>
+          <input id="search" class=="search" type="text" placeholder="Search..." required>
+        </p>
+      </form>
+
+      <progress id="progress_search"></progress>
+
+        <div data-type="list">
+          <ul id="books_ul">
+            <div id="books" class="books">
+            </div>  
+          </ul>
+        </div>
+      </article>
+
+      <article class="content scrollable header">
+        <div role="toolbar">
+          <ul>
+            <li><button id="book_tab" class="action-icon selectall">Books</button></li>
+            <li><button id="author_tab" class="action-icon user">Authors</button></li>
+            <li><button id="subject_tab" class="action-icon calendar-agendaview">Subjects</button></li>
+          </ul>
+        </div>
+      </article>
+
+    </section> <!-- end inicio -->
+
+  
+  <!--·························· Info ··························-->
+  <section role="region" id="info" data-position="right">
+    <header class="fixed">
+      <a id="btn-info-back" href="#"><span class="icon icon-back">back</span></a>
+      <h1>OpenShelf</h1>
+    </header>
+
+    <article class="content scrollable header">
+      <header><h2>Info</h2></header>
+      
+        <p>An app to search and read Google Books Books in Firefox OS.</p>
+        <p>Developed by Ana Paula Gomes</p>
+    
+    </article>
+  </section>
+
+  <!--·························· Details ··························-->
+  <section role="region" id="details" data-position="right">
+    <header class="fixed">
+      <a id="btn-details-back" href="#"><span class="icon icon-back">back</span></a>
+      <h1>OpenShelf</h1>
+    </header>
+
+    <article class="content scrollable header">
+      <header><h2 id="subtitle">Subtitle</h2></header>
+      <p id="message" hidden></p>
+      <div id="details_div">
+          <p id="title" ><b>Title</b></p>
+          <p id="authors" >Authors</p>
+          <img id="thumbnail" src="images/livro.jpg" >
+          <p id="description" >Description</p> -----
+          <p id="publisher" >Publisher</p>
+          <p id="publisher_date" >Publisher Date</p>
+          <p id="type" >Type</p>
+          <p id="page_count" >Page Count</p>
+          <p id="categorie" >Categorie</p>
+          <p id="average_rating" >Average Rating</p>
+          <p id="pdf" ><a href="http://www.google.com.br">PDF Avaliable</a></p>
+      </div>
+    </article>
+  </section>
+
+</body>
+</html>
+
